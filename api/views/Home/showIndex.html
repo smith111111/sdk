@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>后台布局页面</title>
+    <script type="text/javascript" src="../../static/js/jquery.js"></script>
+    <script type="text/javascript" src="../../static/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../static/js/easyui-lang-zh_CN.js"></script>
+    <link href="../../static/css/themes/default/easyui.css" rel="stylesheet" />
+    <link href="../../static/css/themes/icon.css" rel="stylesheet" />
+    <script type="text/javascript">
+        $(function () {
+            $(".dlinks").click(function () {
+                bindClickEvent($(this));
+            })
+        })
+        //获取所单击的菜单项，然后对应的页面在中间位置展示。
+        function bindClickEvent(control) {
+            var url=control.attr("url");//获取页面的地址。
+            //先判断在页签中是否已经有了对应的页面。
+            //先获取a标签中的标题，然后根据标题内容来判断页签是否存在。
+            var title= control.text();//获取文本内容。
+            var b=$("#tt").tabs("exists",title);
+            if (b){
+                //条件成立表示页签存在，存在选中。
+                $("#tt").tabs("select",title);
+                return;
+            }
+            //添加页签
+            $("#tt").tabs("add",{
+                title:title,
+                content:createContent(url),
+                closable:true
+
+            });
+        }
+        //返回的是iframe
+        function createContent(url) {
+            var ifrmeContent="  <iframe src='"+url+"' width=\"100%\" height=\"100%\" frameborder=\"0\"></iframe>"
+            return ifrmeContent
+        }
+
+    </script>
+</head>
+<body class="easyui-layout">
+<div data-options="region:'north',border:false" style="height:90px;background:#B3DFDA;padding:10px;overflow: hidden">
+    <img  src="/static/img/logo.gif">
+    <span style="font-size:30px;color: blue;font-weight: bolder;margin-left: 400px">ItcastCms管理系统</span>
+</div>
+<div data-options="region:'west',split:true,title:'West'" style="width:150px;padding:5px;">
+    <!---------------------折叠菜单-------------------------->
+    <div class="easyui-accordion" style="width:auto;height:auto;">
+        <div title="用户管理" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
+            <a href="#" class="dlinks" url="/Admin/UserInfo/index">用户管理</a>
+        </div>
+        <div title="角色管理" data-options="iconCls:'icon-help'" style="padding:10px;">
+            <a href="#" class="dlinks" url="/Admin/RoleInfo/index">角色管理</a>
+        </div>
+        <div title="权限管理" data-options="iconCls:'icon-help'" style="padding:10px;">
+            <a href="#" class="dlinks" url="/Admin/ActionInfo/index">权限管理</a>
+        </div>
+
+    </div>
+
+</div>
+
+<div data-options="region:'south',border:false" style="height:50px;background:#A9FACD;padding:10px;">south region</div>
+<!-------------------中间----------------------->
+<div data-options="region:'center',title:'Center'">
+
+    <!-----------页签------------->
+    <div class="easyui-tabs" style="width:700px;height:250px" fit="true" id="tt">
+        <div title="用户管理" style="padding:10px">
+            <iframe src="/Admin/UserInfo/index" width="100%" height="100%" frameborder="0"></iframe>
+
+        </div>
+
+
+    </div>
+
+
+
+</div>
+</body>
+
+</html>

@@ -1,0 +1,8 @@
+select VARIABLE_VALUE from information_schema.GLOBAL_VARIABLES where VARIABLE_NAME='MAX_CONNECTIONS';
+
+set global max_connections = 100000
+
+
+show status like 'Threads%';
+
+TRUNCATE TABLE report_user

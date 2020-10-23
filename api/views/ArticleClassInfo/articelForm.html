@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="../../static/js/jquery.js"></script>
+    <script type="text/javascript" src="../../static/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../static/js/easyui-lang-zh_CN.js"></script>
+    <link href="../../static/css/themes/default/easyui.css" rel="stylesheet" />
+    <link href="../../static/css/themes/icon.css" rel="stylesheet" />
+    <script type="text/javascript" src="../../static/js/jquery.unobtrusive-ajax.min.js" ></script>
+    <script type="text/javascript">
+        function SubSubChrildFormForm(){
+            $('#addForm').submit()
+        }
+        function afterAdd(data) {
+            window.parent.closeSubChrildFormArticleClassDialog(data)
+        }
+    </script>
+
+</head>
+<body>
+为{{.articelClass.ClassName}}添加子目录
+<form data-ajax="true" data-ajax-method="post" data-ajax-success="afterAdd" data-ajax-url="/Admin/ArticleClassInfo/AddArticleChildClass" id="addForm">
+    <table>
+        <tr><td>文章类型</td><td><input type="text" name="ArticleClassName"></td> </tr>
+        <tr><td>备注</td><td><input type="text" name="Remark"> </td></tr>
+    </table>
+    <input id="articelClassId" value="{{.articelClass.Id}}" name="id" type="hidden"/>
+</form>
+</body>
+</html>

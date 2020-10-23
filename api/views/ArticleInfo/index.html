@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新闻</title>
+    <!-- 注意顺序-->
+    <script type="text/javascript" src="../../static/js/jquery.js"></script>
+    <script type="text/javascript" src="../../static/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../static/js/easyui-lang-zh_CN.js"></script>
+    <link href="../../static/css/themes/default/easyui.css" rel="stylesheet" />
+    <link href="../../static/css/themes/icon.css" rel="stylesheet" />
+    <script>
+        $(function () {
+            $("#addDiv").css("display","none");
+            $.ajax({
+                type: "post",
+                url: "/Admin/ArticleClassInfo/GetArticleClassInfo",
+                data: {},
+                success: function (result) {
+                    for (var i = 0; i < result.rows.length; i++) {
+                        $("#modelid").append($("<option value=\"" + result.rows[i].ClassName + "\">" + result.rows[i].ClassName + "</option>"));
+                    }
+                }
+            });
+            loadData("")
+            $("#modelid").change(function(i){
+                var text= $("#modelid").val()
+                loadData(text)
+            });
+        })
+        function loadData(text) {
+            console.log("v",text)
+            $('#tt').datagrid({
+                url: '/Admin/ArticelInfo/GetArticelInfo?channelName="'+text+'"',
+                title: '数据概况',
+                width: 980,
+                height:820,
+                fitColumns: true, //列自适应
+                nowrap: false,
+                idField: 'Id',//主键列的列明
+                loadMsg: '正在加载新闻的信息...',
+                pagination: true,//是否有分页
+                singleSelect: false,//是否单行选择
+                pageSize: 15,//页大小，一页多少条数据
+                pageNumber: 1,//当前页，默认的
+                pageList: [5, 10, 15],
+                queryParams: {},//往后台传递参数
+                columns: [[//c.UserName, c.UserPass, c.Email, c.RegTime
+                    { field: 'Ext1', title: '用户Id', width: 20 },
+                    { field: 'Username', title: '新增账号', width: 20 },
+                 //   { field: 'PayAccount', title: '支付金额', width: 20 },
+                  //  { field: 'MonthTotal', title: '累计金额', width: 20 },
+                    { field: 'IsActive', title: '活跃用户', width: 10,
+                        formatter: function (value, row, index) {
+                            if (value == 0 ){
+                                return "否"
+                            }else{
+                                return "是"
+                            }
+                        }
+                    },
+                    { field: 'Arppu', title: 'arppu', width: 10 },
+                    { field: 'Arpu', title: 'arpu', width: 10 },
+                    { field: 'Area', title: '区', width: 20,
+                        formatter: function (value, row, index) {
+                            if (value == 1 || value == 1003){
+                                return "一区"
+                            }else if (value == 2 || value == 1103){
+                                return "二区"
+                            }else if (value == 3 || value == 1203){
+                                return "三区"
+                            }else if (value == 4 || value == 1303){
+                                return "四区"
+                            }
+                        }
+                    }
+                    // {
+                    //     field: 'showDetail', title: '详细', width: 80, align: 'right',
+                    //     formatter: function (value, row, index) {
+                    //         var d=row.AddDate.split("T")[0];
+                    //         var year=d.split("-")[0];
+                    //         var month=d.split("-")[1];
+                    //         var day=d.split("-")[2];
+                    //         url=year+"/"+month+"/"+day;
+                    //         var str = "<a href='#' ids='" + row.Id + "' class='details' showAddData='" +url + "'>详细</a>";
+                    //         return str;
+                    //     }
+                    // }
+
+                ]],
+                //载入成功以后触发
+                onLoadSuccess: function () {
+
+                    $(".details").click(function () {
+                        var articelId = $(this).attr("ids");
+                        var showAddData = $(this).attr("showAddData");//2015/1/12
+                        var dir = "/static/Articel/"+showAddData+"/"+articelId+".html";
+                        window.open(dir);
+                    });
+                },
+                // toolbar: [{
+                //     id: 'btnDelete',
+                //     text: '删除',
+                //     iconCls: 'icon-remove',
+                //     handler: function () {
+                //
+                //
+                //     }
+                // }, {
+                //     id: 'btnAdd',
+                //     text: '添加',
+                //     iconCls: 'icon-add',
+                //     handler: function () {
+                //         addArticel();//添加文章
+                //
+                //     }
+                // }, {
+                //     id: 'btnEdit',
+                //     text: '编辑',
+                //     iconCls: 'icon-edit',
+                //     handler: function () {
+                //     }
+                // }],
+            });
+        }
+
+        // function loadDataXianxia() {
+        //     $('#tt').datagrid({
+        //         url: '/Admin/ArticelInfo/GetArticelInfo',
+        //         title: '数据概况',
+        //         width: 980,
+        //         height:820,
+        //         fitColumns: true, //列自适应
+        //         nowrap: false,
+        //         idField: 'Id',//主键列的列明
+        //         loadMsg: '正在加载新闻的信息...',
+        //         pagination: true,//是否有分页
+        //         singleSelect: false,//是否单行选择
+        //         pageSize: 10,//页大小，一页多少条数据
+        //         pageNumber: 1,//当前页，默认的
+        //         pageList: [5, 10, 15],
+        //         queryParams: {},//往后台传递参数
+        //         columns: [[//c.UserName, c.UserPass, c.Email, c.RegTime
+        //            // { field: 'ck', checkbox: true, align: 'left', width: 10 },
+        //             { field: 'Username', title: '新增账号', width: 20 },
+        //            // { field: 'PayAccount', title: '支付金额', width: 20 },
+        //             //{ field: 'MonthTotal', title: '累计金额', width: 20 },
+        //             { field: 'IsActive', title: '活跃用户', width: 20 },
+        //             { field: 'Arppu', title: 'arppu', width: 20 },
+        //             { field: 'Arpu', title: 'arpu', width: 20 },
+        //             // { field: 'CreateTime', title: '创建时间', width: 30, align: 'right',
+        //             //     formatter: function (value, row, index) {
+        //             //         return value.split('T')[0]
+        //             //     }
+        //             // }
+        //             // {
+        //             //     field: 'showDetail', title: '详细', width: 80, align: 'right',
+        //             //     formatter: function (value, row, index) {
+        //             //         var d=row.AddDate.split("T")[0];
+        //             //         var year=d.split("-")[0];
+        //             //         var month=d.split("-")[1];
+        //             //         var day=d.split("-")[2];
+        //             //         url=year+"/"+month+"/"+day;
+        //             //         var str = "<a href='#' ids='" + row.Id + "' class='details' showAddData='" +url + "'>详细</a>";
+        //             //         return str;
+        //             //     }
+        //             // }
+        //
+        //         ]],
+        //         //载入成功以后触发
+        //         onLoadSuccess: function () {
+        //
+        //             $(".details").click(function () {
+        //                 var articelId = $(this).attr("ids");
+        //                 var showAddData = $(this).attr("showAddData");//2015/1/12
+        //                 var dir = "/static/Articel/"+showAddData+"/"+articelId+".html";
+        //                 window.open(dir);
+        //             });
+        //         },
+        //         // toolbar: [{
+        //         //     id: 'btnDelete',
+        //         //     text: '删除',
+        //         //     iconCls: 'icon-remove',
+        //         //     handler: function () {
+        //         //
+        //         //
+        //         //     }
+        //         // }, {
+        //         //     id: 'btnAdd',
+        //         //     text: '添加',
+        //         //     iconCls: 'icon-add',
+        //         //     handler: function () {
+        //         //         addArticel();//添加文章
+        //         //
+        //         //     }
+        //         // }, {
+        //         //     id: 'btnEdit',
+        //         //     text: '编辑',
+        //         //     iconCls: 'icon-edit',
+        //         //     handler: function () {
+        //         //     }
+        //         // }],
+        //     });
+        // }
+        //
+        // function addArticel() {
+        //     $("#addFrame").attr("src","/Admin/ArticelInfo/ShowAddArticelInfo");
+        //     $("#addDiv").css("display","block");
+        //     $('#addDiv').dialog({
+        //         title: '添加文章信息',
+        //         width: 1000,
+        //         height: 1000,
+        //         collapsible: true,
+        //         maximizable: true,
+        //         resizable: true,
+        //         modal: true,
+        //         buttons: [{
+        //             text: 'Ok',
+        //             iconCls: 'icon-ok',
+        //             handler: function () {
+        //                 // //提交表单。
+        //                  var childWindows=$("#addFrame")[0].contentWindow;//获取子窗体的windows对象。
+        //                 //
+        //                  childWindows.subForm()//提交表单
+        //             }
+        //         }, {
+        //             text: 'Cancel',
+        //             handler: function () {
+        //                 $('#addDiv').dialog('close');
+        //             }
+        //         }]
+        //     });
+        // }
+        // function closeAddArtice(data) {
+        //     if(data.flag=="ok"){
+        //         $.messager.alert("提示","添加成功","info");
+        //         $('#addDiv').dialog('close');
+        //         $('#tt').datagrid('reload');//重新加载表格中的数据
+        //     }else{
+        //         $.messager.alert("提示","添加失败","error");
+        //     }
+        // }
+
+    </script>
+</head>
+<body>
+项目名称
+<br/>
+<br/>
+<select id="modelid"></select>
+<br/>
+<br/>
+<table id="tt" style="width: 700px;" title="标题，可以使用代码进行初始化，也可以使用这种属性的方式"
+       iconcls="icon-edit">
+</table>
+<div id="addDiv">
+    <iframe id="addFrame" frameborder="0" width="100%" height="100%"></iframe>
+</div>
+</body>
+</html>

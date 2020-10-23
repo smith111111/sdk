@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="../../static/js/jquery.js"></script>
+    <script type="text/javascript" src="../../static/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../static/js/easyui-lang-zh_CN.js"></script>
+    <link href="../../static/css/themes/default/easyui.css" rel="stylesheet" />
+    <link href="../../static/css/themes/icon.css" rel="stylesheet" />
+    <script type="text/javascript" src="../../static/js/jquery.unobtrusive-ajax.min.js" ></script>
+    <script type="text/javascript">
+        $(function () {
+            //完成用户权限分配
+            $(".selectActions").click(function () {
+                setUserAction($(this));
+            })
+            //清除用户权限
+            $(".btnClearActions").click(function () {
+                clearUserAction($(this));
+            })
+        })
+            //完成用户权限的分配
+            function setUserAction(control) {
+                var actionId=control.attr("ids");
+                var isPass=control.val()
+                $.post("/Admin/UserInfo/SetUserAction",{"actionId":actionId,"isPass":isPass,"userId":{{.userInfo.Id}}},function (data) {
+                    if(data.flag=="ok"){
+                        $.messager.show({
+                            title: '提示',
+                            msg: '权限分配成功',
+                            showType: 'show'
+                        })
+                    }else{
+                        $.messager.show({
+                            title: '提示',
+                            msg: '权限分配失败',
+                            showType: 'show'
+                        })
+                    }
+                })
+            }
+
+            //清除用户权限
+            function clearUserAction(control) {
+                var actionId=control.attr("ids");
+                var userId={{.userInfo.Id}}
+                        $.post("/Admin/UserInfo/DeleteUserAction",{"actionId":actionId,"userId":userId},function (data) {
+                            if(data.flag=="ok"){
+                                control.parent().find(".selectActions").removeAttr("checked");//注意parent()是方法,find()方法找类选择器，所以要加上"."
+                                $.messager.show({
+                                    title: '提示',
+                                    msg: '权限删除成功!!',
+                                    showType: 'show'
+                                })
+                            }else{
+                                $.messager.show({
+                                    title: '提示',
+                                    msg: '权限删除失败',
+                                    showType: 'show'
+                                })
+                            }
+                        })
+            }
+
+    </script>
+</head>
+<body >
+为用户<span style="font-size: 14px;color:red;font-weight: bolder">{{.userInfo.UserName}}</span>分配权限
+<table width="100%">
+    <tr><td>编号</td><td>权限名称</td><td>Url</td><td>操作</td></tr>
+{{range .allActions}}
+    <tr>
+        <td>{{.Id}}</td>
+        <td>{{.ActionInfoName}}</td>
+        <td>{{.Url}}</td>
+        <td>
+        {{if checkUserAction $.userExtActions .Id}}
+        {{if checkUserActionId $.userExtActions}}
+            <label for="cba_{{.Id}}">允许</label>
+            <input type="radio" value="true" class="selectActions" name="cba_{{.Id}}" ids="{{.Id}}" checked="checked">
+            <label for="cba_{{.Id}}">禁止</label>
+            <input type="radio" value="false" class="selectActions" name="cba_{{.Id}}" ids="{{.Id}}">
+        {{else}}
+            <label for="cba_{{.Id}}">允许</label>
+            <input type="radio" value="true" class="selectActions" name="cba_{{.Id}}" ids="{{.Id}}">
+            <label for="cba_{{.Id}}">禁止</label>
+            <input type="radio" value="false" class="selectActions" name="cba_{{.Id}}" ids="{{.Id}}" checked="checked">
+        {{end}}
+        {{else}}
+            <label for="cba_{{.Id}}">允许</label>
+
+            <input type="radio" value="true" class="selectActions" name="cba_{{.Id}}" ids="{{.Id}}">
+            <label for="cba_{{.Id}}">禁止</label>
+            <input type="radio" value="false" class="selectActions" name="cba_{{.Id}}" ids="{{.Id}}">
+        {{end}}
+            <input type="button" value="删除" class="btnClearActions" ids="{{.Id}}">
+
+        </td>
+    </tr>
+{{end}}
+</table>
+</body>
+</html>

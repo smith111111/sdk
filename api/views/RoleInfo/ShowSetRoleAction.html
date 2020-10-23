@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="../../static/js/jquery.js"></script>
+    <script type="text/javascript" src="../../static/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../static/js/easyui-lang-zh_CN.js"></script>
+    <link href="../../static/css/themes/default/easyui.css" rel="stylesheet" />
+    <link href="../../static/css/themes/icon.css" rel="stylesheet" />
+    <script type="text/javascript" src="../../static/js/jquery.unobtrusive-ajax.min.js" ></script>
+    <script type="text/javascript">
+        function formRoleActionSubmit(){
+            $('#setRoleActionForm').submit()
+        }
+
+        function afterRoleActionSet(data) {
+            window.parent.afterRoleAction(data)
+        }
+    </script>
+</head>
+
+<body>
+为角色<span style="font-size:14px;color:red;font-weight: bolder">{{.roleInfo.RoleName}}</span>分配权限
+<form data-ajax="true" data-ajax-method="post" data-ajax-success="afterRoleActionSet" data-ajax-url="/Admin/RoleInfo/SetRoleAction" id="setRoleActionForm">
+    <input type="hidden" name="roleId" value="{{.roleInfo.Id}}">
+{{range .allActionList}}
+{{if checkAction $.roleExtActions .Id}}
+    <input type="checkbox" name="cba_{{.Id}}" checked="checked" value="{{.Id}}">{{.ActionInfoName}}
+{{else}}
+    <input type="checkbox" name="cba_{{.Id}}"  value="{{.Id}}">{{.ActionInfoName}}
+{{end}}
+{{end}}
+</form>
+
+</body>
+</html>

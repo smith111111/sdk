@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 注意顺序-->
+    <script type="text/javascript" src="../../static/js/jquery.js"></script>
+    <script type="text/javascript" src="../../static/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../static/js/easyui-lang-zh_CN.js"></script>
+    <link href="../../static/css/themes/default/easyui.css" rel="stylesheet" />
+    <link href="../../static/css/themes/icon.css" rel="stylesheet" />
+    <script type="text/javascript" src="../../static/js/UserInfo/UserInfo.js"></script>
+</head>
+<body>
+<table id="tt" style="width: 700px;margin-top: 20px;" title="标题，可以使用代码进行初始化，也可以使用这种属性的方式" iconcls="icon-edit">
+    用户名:<input type="text" id="txtSearchUName" />&nbsp;&nbsp;
+    备注:<input type="text" id="txtSearchRemark" />
+    <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:80px;margin-left: 30px" id="btnSearch">Search</a>
+</table>
+
+<div id="addDiv">
+ <form id="addForm">
+  <table style="margin-left: 30px;margin-top: 60px">
+     <input name="id" id="id" type="hidden">
+      <tr><td>用户名</td><td><input type="text" name="userName" id="txtUserName"> </td></tr>
+        <!-- 若是新增和更新的密码显示不一致,建议使用两个表单-->
+      <tr><td>密码</td><td><input type="password" name="userPwd"> </td></tr>
+
+      <tr><td>备注</td><td><input type="text" name="userRemark"> </td></tr>
+  </table>
+  </form>
+</div>
+
+<div id="userRole">
+    <iframe src="" width="100%" height="100%" id="userRoleIframe"></iframe>
+</div>
+
+<div id="setUserActionDiv" style="margin-left: 20px;margin-top: 35px">
+    <iframe id="setUserActionFrame" frameborder="0" width="100%" height="100%"></iframe>
+</div>
+
+
+</body>
+</html>
